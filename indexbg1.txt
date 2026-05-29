@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan - SMPN 2 Pangandaran</title>
+    <style>
+        :root { 
+            --primary: #002147; 
+            --accent: #d4af37; 
+            --white: #ffffff; 
+        }
+        
+        /* Background Biru Tua dengan aksen Gold */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, var(--primary) 0%, #00152e 100%); 
+            color: #333; 
+            margin: 0; 
+            padding: 20px; 
+            text-align: center; 
+            min-height: 100vh;
+        }
+        
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            background: var(--white); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            border-bottom: 8px solid var(--accent); /* Aksen Gold di bawah */
+        }
+        
+        .logo-sekolah { width: 120px; height: auto; margin-bottom: 15px; }
+        h1 { color: var(--primary); font-size: 1.4rem; margin: 5px 0; }
+        
+        .countdown-box { background: var(--primary); color: var(--white); padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid var(--accent); }
+        #timer { font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+        
+        #form-wrapper { display: none; margin-top: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--accent); color: var(--primary); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #b8962f; }
+        
+        .result { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; text-align: left; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .failed { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info-box { margin-top: 30px; padding: 15px; background: #fffdf5; border: 1px solid var(--accent); border-radius: 8px; font-size: 0.85rem; text-align: left; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="LOGO_SMPN_2_PANGANDARAN.jpeg" alt="Logo SMPN 2 Pangandaran" class="logo-sekolah">
+    <h2>SMPN 2 Pangandaran</h2>
+    <h1>Pengumuman Hasil TKA Siswa Kelas IX</h1>
+    <p>Tahun Ajaran 2025/2026</p>
+
+    <div id="countdown-area" class="countdown-box">
+        Waktu Pengumuman:<br>
+        <div id="timer">Memuat...</div>
+        <p id="pesan-tunggu" style="font-size: 0.9rem;">Saat ini belum waktunya untuk melihat pengumuman. Silakan banyak berdoa, semoga hasilnya memuaskan.</p>
+    </div>
+
+    <div id="form-wrapper">
+        <input type="number" id="nisn" placeholder="Masukkan NISN Anda">
+        <button onclick="cariSiswa()">Cek Kelulusan</button>
+        <div id="hasil" class="result"></div>
+    </div>
+
+    <div class="info-box">
+        <strong>Pengumuman Penting:</strong><br>
+        Untuk mendapatkan Surat Keterangan Lulus, silakan hubungi nomor Whatsapp: 081320661843 dengan format: KELULUSAN_NISN.
+    </div>
+</div>
+
+<script>
+    const targetDate = new Date("June 10, 2026 09:55:00").getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+            document.getElementById('countdown-area').style.display = 'none';
+            document.getElementById('form-wrapper').style.display = 'block';
+        } else {
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("timer").innerHTML = `${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
+        }
+    }
+
+    const dataSiswa = {
+        "1234567890": {nama: "Ahmad Fauzan", kelas: "XII MPLB", status: "LULUS"},
+        "0987654321": {nama: "Siti Aisyah", kelas: "XII TKPI", status: "LULUS"},
+        "1122334455": {nama: "Budi Santoso", kelas: "XII TO", status: "TIDAK LULUS"}
+    };
+
+    function cariSiswa() {
+        const nisn = document.getElementById('nisn').value;
+        const hasil = document.getElementById('hasil');
+        hasil.style.display = 'block';
+        if (dataSiswa[nisn]) {
+            const s = dataSiswa[nisn];
+            hasil.className = 'result ' + (s.status === "LULUS" ? 'success' : 'failed');
+            hasil.innerHTML = `<strong>${s.status === "LULUS" ? "Selamat, Anda dinyatakan LULUS." : "Mohon maaf, Anda dinyatakan TIDAK LULUS."}</strong><br><br>
+                Nama Siswa : ${s.nama}<br>NISN : ${nisn}<br>Kelas/Jurusan : ${s.kelas}<br>Status Kelulusan : <strong>${s.status}</strong>`;
+        } else {
+            hasil.className = 'result failed';
+            hasil.innerHTML = "Data tidak ditemukan. Silakan periksa kembali NISN Anda atau hubungi pihak sekolah.";
+        }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+</script>
+
+</body>
+</html>
